@@ -1,0 +1,245 @@
+Snake get Horse - Update Log
+
+This log reconstructs the major changes made during the current build session.
+It is not a commit-by-commit history, but it captures the feature and design
+movement of the project from a basic raylib snake game into the current
+"Snake get horse" roguelike arcade build.
+
+
+ Kept the game in a direct C style with explicit structs, enums, timers, and
+  state transitions.
+ Continued the separation between:
+   simulation/update logic
+   rendering logic
+   raylib/platform input and window handling
+ Preserved deterministic xorshift RNG for gameplay systems.
+
+
+
+- Replaced the single red fruit circle with multiple primitive-drawn fruit
+  types:
+  - apple
+  - orange
+  - banana
+  - cherry
+
+ Fruit is still drawn code using raylib primitives.
+
+ No PNG/image asset dependency was added.
+
+ Fruit types can have different score values.
+
+
+- Reworked the snake away from plain rectangles.
+- Added primitive-drawn snake body cells, curved-looking body connections,
+  head shape, eyes, tongue, and tail tip.
+- Boosted snake now uses animated electric/rainbow color changes.
+- Added a visible rock shield in front of the head when secret rock medal charges
+  are active.
+
+
+
+ Renamed the title to "Snake get horse".
+ Added title-screen info box:
+  - avoid falling rocks
+  - collect fruit
+  - horse collectable activates snake boost
+  - boost can break rocks while active
+- Added checkbox-style title options:
+  - Easy mode
+  - Falling rocks
+  - Audio
+- Easy mode wraps the snake around screen edges instead of killing it.
+- Falling rocks can be disabled from the title screen.
+- Audio can be muted from the title screen.
+
+
+horse collectible
+
+Added a white horse collectible as a 2x2 primitive-drawn item.
+
+- Horse spawn milestones are now spaced out instead of every 10 fruit:
+  - 10
+  - 25
+  - 45
+  - 70
+  - 100
+  - 140
+  - 190
+  - 260
+  - then later milestones continue every 90 fruit
+- Collecting a horse:
+  - increments the Horses counter
+  - grows the snake by 3 segments
+  - activates boost
+- Boost duration was tuned down from 30 seconds to 22 seconds.
+- Boost makes the snake faster and visually electric/rainbow.
+- Boost lets the snake smash rocks.
+
+
+Falling Rocks
+
+- Added falling rock hazards with an explicit state flow:
+  - empty
+  - warning/shadow
+  - placed rock
+- Removed 1-cell rock drops because they were too easily confused with fruit.
+- Rock sizes are now:
+  - 2-cell rock
+  - 4-cell rock, drawn as one larger 2x2 rock
+  - rare 6-cell rock, drawn as one larger rectangular rock
+- Rocks fall on randomized timers, roughly every 5 to 12 seconds before
+  upgrades modify that timing.
+- Rock warning duration is visible before the rock lands.
+- Boosted snake can smash rocks.
+
+
+ Rock Medal / Rock Shield
+
+- Added secret rock-smashing medal collectible.
+- After 7 boosted rock-smash events, a rock medal collectible can appear.
+- Collecting the medal gives rock shield charges.
+- Shield starts at 3 charges.
+- If the snake touches a rock without boost while shield charges are active:
+  - one shield charge is spent
+  - the rock is cleared
+  - the snake survives
+- When charges are active, a small rock shield is drawn near the snake head.
+
+
+Code-Generated Background Music
+
+- Added RTG background music.
+- No audio file asset
+- Music is generated in code using raylib/procedural waveforms.
+- Added baked music settings:
+
+
+Developer Console
+
+- Added a backtick (`) developer console.
+- Console initially supports:
+  - bg.audio
+  - spawn.boss
+- bg.audio opens the live background music editor.
+- spawn.boss spawns the Jboss during gameplay for testing.
+- Opening the console during gameplay now pauses the simulation.
+- Closing the console resumes only if the console caused the pause.
+
+
+-bg.audio Music Editor
+
+- Added a simple in-game audio editor panel.
+- Command: bg.audio
+- Supports sliders/options for:
+  - bpm
+  - volume
+  - root frequency
+  - waveform
+  - bass pattern
+  - lead density
+  - scale
+  - melody pattern
+  - drum amount
+  - noise amount
+- Supports:
+  - Apply
+  - Export
+  - Random
+  - Mutate
+- Export writes settings to bg_audio_settings.txt.
+
+\
+- Pause
+
+- Added pause support.
+- P pauses/unpauses during gameplay and boss fights.
+- Backtick console opening also pauses gameplay.
+- While paused:
+  - snake movement stops
+  - boost timer stops
+  - rock timers stop
+  - boss timers stop
+  - damage grace timer stops
+- Added pause overlay.
+
+
+- Added a 40px HUD band above the play grid.
+- Window height now includes the HUD area.
+- The play grid remains 40 columns by 30 rows.
+- Score, HP, Horses, Shield, and Jockey HP are drawn in the HUD band instead
+  of on top of the playable grid.
+- This prevents fruit, rocks, and collectibles from being hidden under score
+  text.
+
+
+
+- Added milestone upgrade screens.
+- First upgrade now appears at 15 fruit.
+- Later upgrades continue every 30 fruit.
+- Upgrade screen offers 3 choices by default.
+- Boss reward can unlock 4 future upgrade choices.
+- Current upgrade pool:
+  - Quick Scales: snake speed +5%
+  - Lucky Horse: fruit can reveal bonus horses
+  - Stone Patience: rockfalls arrive later
+  - Long Warning: rock shadows linger longer
+  - Horsepower: horse boost lasts +3s
+  - Hard Head: rock medal grants +1 charge
+  - Sweet Fruit: fruit score +5
+  - Small Appetite: every 4th fruit skips growth
+  - Stable Hooves: boost rock-smashes add boost time
+  - Kinder Rocks: giant rocks become rarer
+
+
+
+- Added the Jockey boss.
+- Boss appears at 90 fruit, then repeats every 90 fruit.
+- Boss has:
+  - 3 HP
+  - telegraph phase
+  - dash phase
+  - recover phase
+- Boss movement:
+  - chooses a horizontal or vertical lane
+  - shows warning hoofprints/telegraph cells
+  - dashes across the board
+  - recovers, then chooses another lane
+- If the snake touches the Jockey normally, it takes damage.
+- If the snake has shield charges, shield can protect it.
+- If the snake is boosted, touching the Jockey damages the boss.
+- Defeating the boss opens a boss reward screen.
+- Added primitive-drawn 2x2 jockey/horse boss art.
+
+
+- Defeating the Jockey opens a 3-choice boss reward screen.
+- Boss reward pool:
+  - Golden Saddle: horse boost lasts +6s
+  - Horse Magnet: lucky horse chance +6%
+  - Champion Charge: rock medals hold +2 charges
+  - Four Choices: future upgrade screens show one extra choice
+
+
+- Added HP as shard-based health to avoid floating-point health logic.
+- 5 shards = 1.0 HP.
+- Snake starts with 1.0 HP.
+- Max HP is currently capped at 5.0 HP.
+- Rocks and the Jockey now use damage before game over.
+- Added damage grace timer after surviving a hit.
+- Damage grace can be improved through stat rewards.
+
+
+
+- Added chest collectible.
+- Chests can drop when boosted snake smashes larger rocks:
+  - 4-cell rock: 20% chance
+  - 6-cell rock: 45% chance
+- Chest Luck stat increases chest drop chance by +5%.
+- Touching a chest opens a 2-choice stat reward screen.
+- Current snake stat pool:
+  - Shed Skin: max HP +0.2 and heal +0.2
+  - Sweet Tooth: fruit score +1
+  - Treasure Nose: chest chance +5%
+  - Slip Away: longer grace after damage
+  - Fruit Sense: better fruit appears more often
+  - Lean Body: some fruit skips tail growth
