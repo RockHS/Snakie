@@ -1,2 +1,0 @@
-# Snakie
-FIRST GAME ATTEMPT 
