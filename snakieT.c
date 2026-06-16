@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 
+// Public build keeps the source, executable, and update log synced together.
 #define SCREEN_WIDTH 800
 #define GRID_SIZE 20
 #define HUD_HEIGHT 40

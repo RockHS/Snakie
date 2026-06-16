@@ -4,7 +4,7 @@ this is not really a perfect commit history or anything.
 its more just my notes of what got added while the snake game slowly got out of hand lol.
 
 the game started as a pretty basic raylib snake project while i was learning c,
-then it turned into this weird snake / horse / rock / roguelike thing.
+then it turned into this snake / horse / rock / roguelike thing.
 
 
 basic code direction
@@ -57,7 +57,7 @@ title screen / options
 horse collectible
 
 - added the white horse collectible.
-- horse is 2x2 cells now so it can look more like an actual little horse.
+- horse is 2x2 cells now so it can look more like an actual little horse. ( THIS HORSE WAS HARD AS FUCK TO CODE SO LEAVE ME ALONE I KNOW IT SUCKS)
 - horse milestones are spaced out like:
   - 10
   - 25
@@ -72,7 +72,7 @@ horse collectible
   - adds to the Horses counter
   - grows the snake by 3
   - activates boost
-- boost got reduced from 30 seconds to 22 seconds because it was too easy to chain horses.
+- boost got reduced from 30 seconds to 22 seconds because it was too easy to chain horses.(still might be)
 - boost makes the snake faster and lets it smash rocks.
 
 
